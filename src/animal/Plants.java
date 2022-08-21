@@ -3,12 +3,18 @@ package animal;
 import java.util.List;
 import java.util.Random;
 
-public class Plants extends Animal{
+public class Plants extends Animal implements Runnable{
+    private List<Animal> newPlants;
+
+    public Plants(Field field, Location location, List<Animal> newPlants) {
+        super(field, location);
+        this.newPlants = newPlants;
+    }
 
     private static final int BREEDING_AGE = 5;
     private static final int MAX_AGE = 10;
     private static final double BREEDING_PROBABILITY = 0.10;
-    private static final int MAX_LITTER_SIZE = 5;
+    private static final int MAX_LITTER_SIZE = 7;
     private static final Random rand = RandomNumbers.getRandom();
 
     private int age;
@@ -28,15 +34,10 @@ public class Plants extends Animal{
         incrementAge();
         if(isAlive()) {
             giveBirth(newPlants);
-            Location newLocation = getField().freeAdjacentLocation(getLocation());
-            if(newLocation != null) {
-                setLocation(newLocation);
-            }
-            else {
+        } else {
                 setDead();
             }
         }
-    }
 
     private void incrementAge()
     {
@@ -72,4 +73,13 @@ public class Plants extends Animal{
         return age >= BREEDING_AGE;
     }
 
+    @Override
+    public void run() {
+        System.out.println("Thread Plants run!");
+        act(newPlants);
+        incrementAge();
+        giveBirth(newPlants);
+        breed();
+        canBreed();
+    }
 }

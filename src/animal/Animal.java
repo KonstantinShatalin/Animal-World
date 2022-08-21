@@ -1,21 +1,18 @@
 package animal;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class Animal
 {
 
     public static void main(String[] args) {
         Simulator simulator = new Simulator();
-       // simulator.runLongSimulation(); // длительная симуляция на 1000 итераций
+        simulator.runLongSimulation(); // длительная симуляция на 1000 итераций
        // simulator.simulate(20); симуляция на количество итераций
        // simulator.simulateOneStep(); симуляция одной итерации
-        ExecutorService executorService = Executors.newFixedThreadPool(15);
-        executorService.execute(simulator);
-        executorService.shutdown();
+
     }
+
     private boolean alive;
     private Field field;
     private Location location;
@@ -62,5 +59,6 @@ public abstract class Animal
     {
         return field;
     }
+
 }
 

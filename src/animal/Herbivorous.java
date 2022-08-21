@@ -1,4 +1,5 @@
 package animal;
+
 import java.util.List;
 
 public abstract class Herbivorous extends Animal {

@@ -2,12 +2,13 @@ package animal;
 
 import animal.herbivorous.*;
 import animal.predator.*;
-
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Simulator implements Runnable
+public class Simulator
 {
     private static final int DEFAULT_WIDTH = 120;
     private static final int DEFAULT_DEPTH = 80;
@@ -36,7 +37,6 @@ public class Simulator implements Runnable
         ArrayList<Class> allClass = new ArrayList<>();
         Collections.addAll(allClass,Bear.class, Boa.class, Eagle.class, Fox.class,Wolf.class, Boar.class,Buffalo.class,
                 Caterpillar.class, Deer.class, Duck.class,Goat.class,Horse.class,Mouse.class,Rabbit.class,Sheep.class);
-
         animals = new ArrayList<>();
         field = new Field(depth, width);
 
@@ -73,7 +73,7 @@ public class Simulator implements Runnable
                 view.setColor(Duck.class, Color.MAGENTA);
             }
             if (clazz.equals(Goat.class)) {
-                view.setColor(Goat.class, Color.GREEN);
+                view.setColor(Goat.class, Color.PINK);
             }
             if (clazz.equals(Horse.class)) {
                 view.setColor(Horse.class, Color.pink);
@@ -109,11 +109,7 @@ public class Simulator implements Runnable
 
     public void simulateOneStep()
     {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        delay();
         step++;
 
         List<Animal> newAnimals = new ArrayList<>();
@@ -139,47 +135,32 @@ public class Simulator implements Runnable
         view.showStatus(step, field);
     }
 
-    private void populate()
-    {
+    private void populate() {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
         Random rand = RandomNumbers.getRandom();
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
                 if(rand.nextDouble() <= PREDATOR_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
-                    Bear bear = new Bear(true, field, location);
-                    Boa boa = new Boa(true,field,location);
-                    Eagle eagle = new Eagle(true,field,location);
-                    Fox fox = new Fox(true,field,location);
-                    Wolf wolf = new Wolf(true,field,location);
-                    animals.add(bear);
-                    animals.add(boa);
-                    animals.add(eagle);
-                    animals.add(fox);
-                    animals.add(wolf);
+                    animals.add(new Bear(true, field, location));
+                    animals.add(new Boa(true,field,location));
+                    animals.add(new Eagle(true,field,location));
+                    animals.add(new Fox(true,field,location));
+                    animals.add(new Wolf(true,field,location));
                 }
                 else if(rand.nextDouble() <= HERBIVOROUS_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
-                    Boar boar = new Boar(true, field, location);
-                    Buffalo buffalo = new Buffalo(true,field,location);
-                    Caterpillar caterpillar = new Caterpillar(true,field,location);
-                    Deer deer = new Deer(true,field,location);
-                    Duck duck = new Duck(true,field,location);
-                    Goat goat = new Goat(true,field,location);
-                    Horse horse = new Horse(true,field,location);
-                    Mouse mouse = new Mouse(true,field,location);
-                    Rabbit rabbit = new Rabbit(true,field,location);
-                    Sheep sheep = new Sheep(true,field,location);
-                    animals.add(boar);
-                    animals.add(buffalo);
-                    animals.add(caterpillar);
-                    animals.add(deer);
-                    animals.add(duck);
-                    animals.add(goat);
-                    animals.add(horse);
-                    animals.add(mouse);
-                    animals.add(rabbit);
-                    animals.add(sheep);
+                    animals.add(new Boar(true, field, location));
+                    animals.add(new Buffalo(true,field,location));
+                    animals.add(new Caterpillar(true,field,location));
+                    animals.add(new Deer(true,field,location));
+                    animals.add(new Duck(true,field,location));
+                    animals.add(new Goat(true,field,location));
+                    animals.add(new Horse(true,field,location));
+                    animals.add(new Mouse(true,field,location));
+                    animals.add(new Rabbit(true,field,location));
+                    animals.add(new Sheep(true,field,location));
                 }
                 else if (rand.nextDouble() <= PLANTS_CREATION_PROBABILITY){
                     Location location = new Location(row,col);
@@ -188,19 +169,21 @@ public class Simulator implements Runnable
                 }
             }
         }
+        for (Animal animal : animals){
+            Thread threadAnimals = new Thread((Runnable) animal);
+            executorService.execute(threadAnimals);
+
+
+        }
     }
 
-    private void delay(int millisec)
+    private void delay()
     {
         try {
-            Thread.sleep(millisec);
+            Thread.sleep(1000);
         }
         catch (InterruptedException ie) {
+            ie.printStackTrace();
         }
-    }
-
-    @Override
-    public void run() {
-        runLongSimulation();
     }
 }

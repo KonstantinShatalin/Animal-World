@@ -2,12 +2,18 @@ package animal.predator;
 
 
 import animal.*;
+import animal.herbivorous.*;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Eagle extends Predator {
+public class Eagle extends Animal implements Runnable,Behaviorable{
+    private List<Animal> newPredator;
+
+    public Eagle(Field field, Location location, List<Animal> newPredator) {
+        super(field, location);
+        this.newPredator = newPredator;
+    }
     private static final int BREEDING_AGE = 40;
     private static final int MAX_AGE = 200;
     private static final double BREEDING_PROBABILITY = 0.09;
@@ -30,9 +36,6 @@ public class Eagle extends Predator {
         }
     }
 
-    public Eagle(Field field, Location location) {
-        super(field, location);
-    }
     @Override
     public void act(List<Animal> newPredator) {
         incrementAge();
@@ -70,17 +73,68 @@ public class Eagle extends Predator {
     }
 
     @Override
-    public Location findFood() {
+    public synchronized Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
-        Iterator<Location> it = adjacent.iterator();
-        while(it.hasNext()) {
-            Location where = it.next();
+        for (Location where : adjacent) {
             Object animal = field.getObjectAt(where);
-            if(animal instanceof Herbivorous) {
-                Herbivorous herbivorous = (Herbivorous) animal;
-                if(herbivorous.isAlive()) {
-                    herbivorous.setDead();
+            if (animal instanceof Boar boar) {
+                if (boar.isAlive()) {
+                    boar.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Buffalo buffalo) {
+                if (buffalo.isAlive()) {
+                    buffalo.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Caterpillar caterpillar) {
+                if (caterpillar.isAlive()) {
+                    caterpillar.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Deer deer) {
+                if (deer.isAlive()) {
+                    deer.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Duck duck) {
+                if (duck.isAlive()) {
+                    duck.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Goat goat) {
+                if (goat.isAlive()) {
+                    goat.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Horse horse) {
+                if (horse.isAlive()) {
+                    horse.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Mouse mouse) {
+                if (mouse.isAlive()) {
+                    mouse.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Rabbit rabbit) {
+                if (rabbit.isAlive()) {
+                    rabbit.setDead();
+                    foodLevel = HERBIVOROUS_FOOD_VALUE;
+                    return where;
+                }
+            }if (animal instanceof Sheep sheep) {
+                if (sheep.isAlive()) {
+                    sheep.setDead();
                     foodLevel = HERBIVOROUS_FOOD_VALUE;
                     return where;
                 }
@@ -116,4 +170,16 @@ public class Eagle extends Predator {
         return age >= BREEDING_AGE;
     }
 
+    @Override
+    public void run() {
+        System.out.println("Thread Eagle run!");
+        act(newPredator);
+        incrementAge();
+        incrementHunger();
+        findFood();
+        giveBirth(newPredator);
+        breed();
+        canBreed();
+
+    }
 }

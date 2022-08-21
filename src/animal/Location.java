@@ -14,8 +14,7 @@ public class Location
 
     public boolean equals(Object obj)
     {
-        if(obj instanceof Location) {
-            Location other = (Location) obj;
+        if(obj instanceof Location other) {
             return row == other.getRow() && col == other.getCol();
         }
         else {

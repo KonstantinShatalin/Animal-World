@@ -1,12 +1,16 @@
 package animal.herbivorous;
 
 import animal.*;
-
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Duck extends Herbivorous {
+public class Duck extends Animal implements Runnable,Behaviorable{
+    private List<Animal> newHerbivorous;
+
+    public Duck(Field field, Location location, List<Animal> newHerbivorous) {
+        super(field, location);
+        this.newHerbivorous = newHerbivorous;
+    }
     private static final int BREEDING_AGE = 7;
     private static final int MAX_AGE = 30;
     private static final double BREEDING_PROBABILITY = 0.18;
@@ -29,9 +33,6 @@ public class Duck extends Herbivorous {
         }
     }
 
-    public Duck(Field field, Location location) {
-        super(field, location);
-    }
     @Override
     public void act(List<Animal> newHerbivorous) {
         incrementAge();
@@ -66,16 +67,13 @@ public class Duck extends Herbivorous {
     }
 
     @Override
-    public Location findFood() {
+    public synchronized Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
-        Iterator<Location> it = adjacent.iterator();
-        while(it.hasNext()) {
-            Location where = it.next();
+        for (Location where : adjacent) {
             Object animal = field.getObjectAt(where);
-            if(animal instanceof Plants) {
-                Plants plants = (Plants) animal;
-                if(plants.isAlive()) {
+            if (animal instanceof Plants plants) {
+                if (plants.isAlive()) {
                     plants.setDead();
                     foodLevel = PLANTS_FOOD_VALUE;
                     return where;
@@ -111,4 +109,15 @@ public class Duck extends Herbivorous {
         return age >= BREEDING_AGE;
     }
 
+    @Override
+    public void run() {
+        System.out.println("Thread Duck run!");
+        act(newHerbivorous);
+        incrementAge();
+        incrementHunger();
+        findFood();
+        giveBirth(newHerbivorous);
+        breed();
+        canBreed();
+    }
 }

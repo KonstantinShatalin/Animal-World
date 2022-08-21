@@ -115,7 +115,7 @@ public class SimulatorView extends JFrame
 
         public void preparePaint()
         {
-            if(! size.equals(getSize())) {  // if the size has changed...
+            if(!size.equals(getSize())) {
                 size = getSize();
                 fieldImage = fieldView.createImage(size.width, size.height);
                 g = fieldImage.getGraphics();

@@ -4,8 +4,17 @@ import java.util.HashMap;
 
 public class FieldStats
 {
+    private Field field;
+    Class animalClass;
+
+    public FieldStats(Field field, Class animalClass) {
+        this.field = field;
+        this.animalClass = animalClass;
+    }
+
     private HashMap<Class, Counter> counters;
     private boolean countsValid;
+
 
     public FieldStats()
     {
@@ -15,7 +24,7 @@ public class FieldStats
 
     public String getPopulationDetails(Field field)
     {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         if(!countsValid) {
             generateCounts(field);
         }

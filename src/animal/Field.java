@@ -83,7 +83,7 @@ public class Field{
         }
     }
 
-    public List<Location> adjacentLocations(Location location)
+    public synchronized List<Location> adjacentLocations(Location location)
     {
         assert location != null : "Null location passed to adjacentLocations";
         List<Location> locations = new LinkedList<>();
@@ -116,5 +116,6 @@ public class Field{
     {
         return width;
     }
+
 }
 
