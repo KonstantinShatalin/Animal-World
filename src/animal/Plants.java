@@ -3,14 +3,8 @@ package animal;
 import java.util.List;
 import java.util.Random;
 
-public class Plants extends Animal implements Runnable{
-    private List<Animal> newPlants;
-
-    public Plants(Field field, Location location, List<Animal> newPlants) {
-        super(field, location);
-        this.newPlants = newPlants;
-    }
-
+public class Plants extends Animal
+{
     private static final int BREEDING_AGE = 5;
     private static final int MAX_AGE = 10;
     private static final double BREEDING_PROBABILITY = 0.10;
@@ -71,15 +65,5 @@ public class Plants extends Animal implements Runnable{
     private boolean canBreed()
     {
         return age >= BREEDING_AGE;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Thread Plants run!");
-        act(newPlants);
-        incrementAge();
-        giveBirth(newPlants);
-        breed();
-        canBreed();
     }
 }
