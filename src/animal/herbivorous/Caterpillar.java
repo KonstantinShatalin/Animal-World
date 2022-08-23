@@ -4,13 +4,8 @@ import animal.*;
 import java.util.List;
 import java.util.Random;
 
-public class Caterpillar extends Animal implements Runnable,Behaviorable{
-    private List<Animal> newHerbivorous;
-
-    public Caterpillar(Field field, Location location, List<Animal> newHerbivorous) {
-        super(field, location);
-        this.newHerbivorous = newHerbivorous;
-    }
+public class Caterpillar extends Animal implements Behaviorable
+{
     private static final int BREEDING_AGE = 25;
     private static final int MAX_AGE = 90;
     private static final double BREEDING_PROBABILITY = 0.07;
@@ -67,7 +62,7 @@ public class Caterpillar extends Animal implements Runnable,Behaviorable{
     }
 
     @Override
-    public synchronized Location findFood() {
+    public Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         for (Location where : adjacent) {
@@ -107,17 +102,5 @@ public class Caterpillar extends Animal implements Runnable,Behaviorable{
     @Override
     public boolean canBreed() {
         return age >= BREEDING_AGE;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Thread Caterpillar run!");
-        act(newHerbivorous);
-        incrementAge();
-        incrementHunger();
-        findFood();
-        giveBirth(newHerbivorous);
-        breed();
-        canBreed();
     }
 }

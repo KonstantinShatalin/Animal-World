@@ -4,14 +4,8 @@ import animal.*;
 import java.util.List;
 import java.util.Random;
 
-public class Boar extends Animal implements Runnable,Behaviorable{
-    private List<Animal> newHerbivorous;
-
-    public Boar(Field field, Location location, List<Animal> newHerbivorous) {
-        super(field, location);
-        this.newHerbivorous = newHerbivorous;
-    }
-
+public class Boar extends Animal implements Behaviorable
+{
     private static final int BREEDING_AGE = 15;
     private static final int MAX_AGE = 80;
     private static final double BREEDING_PROBABILITY = 0.10;
@@ -69,7 +63,7 @@ public class Boar extends Animal implements Runnable,Behaviorable{
     }
 
     @Override
-    public synchronized Location findFood() {
+    public Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         for (Location where : adjacent) {
@@ -109,17 +103,5 @@ public class Boar extends Animal implements Runnable,Behaviorable{
     @Override
     public boolean canBreed() {
         return age >= BREEDING_AGE;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Thread Boar run!");
-        act(newHerbivorous);
-        incrementAge();
-        incrementHunger();
-        findFood();
-        giveBirth(newHerbivorous);
-        breed();
-        canBreed();
     }
 }

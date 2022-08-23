@@ -12,7 +12,7 @@ public class Simulator
 {
     private static final int DEFAULT_WIDTH = 120;
     private static final int DEFAULT_DEPTH = 80;
-    private static final double PREDATOR_CREATION_PROBABILITY = 0.02;
+    private static final double PREDATOR_CREATION_PROBABILITY = 0.04;
     private static final double HERBIVOROUS_CREATION_PROBABILITY = 0.08;
     private static final double PLANTS_CREATION_PROBABILITY = 0.10;
 
@@ -34,62 +34,26 @@ public class Simulator
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        ArrayList<Class> allClass = new ArrayList<>();
-        Collections.addAll(allClass,Bear.class, Boa.class, Eagle.class, Fox.class,Wolf.class, Boar.class,Buffalo.class,
-                Caterpillar.class, Deer.class, Duck.class,Goat.class,Horse.class,Mouse.class,Rabbit.class,Sheep.class);
         animals = new ArrayList<>();
         field = new Field(depth, width);
 
         view = new SimulatorView(depth, width);
-        for (Class clazz : allClass){
-            if (clazz.equals(Bear.class)) {
                 view.setColor(Bear.class, Color.GRAY);
-            }
-            if (clazz.equals(Boa.class)) {
                 view.setColor(Boa.class, Color.BLACK);
-            }
-            if (clazz.equals(Eagle.class)) {
                 view.setColor(Eagle.class, Color.DARK_GRAY);
-            }
-            if (clazz.equals(Fox.class)) {
                 view.setColor(Fox.class, Color.ORANGE);
-            }
-            if (clazz.equals(Wolf.class)) {
                 view.setColor(Wolf.class, Color.LIGHT_GRAY);
-            }
-            if (clazz.equals(Boar.class)) {
                 view.setColor(Boar.class, Color.RED);
-            }
-            if (clazz.equals(Buffalo.class)) {
                 view.setColor(Buffalo.class, Color.BLUE);
-            }
-            if (clazz.equals(Caterpillar.class)) {
                 view.setColor(Caterpillar.class, Color.WHITE);
-            }
-            if (clazz.equals(Deer.class)) {
                 view.setColor(Deer.class, Color.YELLOW);
-            }
-            if (clazz.equals(Duck.class)) {
                 view.setColor(Duck.class, Color.MAGENTA);
-            }
-            if (clazz.equals(Goat.class)) {
                 view.setColor(Goat.class, Color.PINK);
-            }
-            if (clazz.equals(Horse.class)) {
                 view.setColor(Horse.class, Color.pink);
-            }
-            if (clazz.equals(Mouse.class)) {
                 view.setColor(Mouse.class, Color.darkGray);
-            }
-            if (clazz.equals(Rabbit.class)) {
                 view.setColor(Rabbit.class, Color.BLUE);
-            }
-            if (clazz.equals(Sheep.class)) {
                 view.setColor(Sheep.class, Color.LIGHT_GRAY);
-            }
-
-        }
-        view.setColor(Plants.class,Color.GREEN);
+                view.setColor(Plants.class,Color.GREEN);
 
         reset();
     }
@@ -131,12 +95,10 @@ public class Simulator
         step = 0;
         animals.clear();
         populate();
-
         view.showStatus(step, field);
     }
 
     private void populate() {
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
         Random rand = RandomNumbers.getRandom();
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
@@ -164,16 +126,9 @@ public class Simulator
                 }
                 else if (rand.nextDouble() <= PLANTS_CREATION_PROBABILITY){
                     Location location = new Location(row,col);
-                    Plants plants = new Plants(true,field,location);
-                    animals.add(plants);
+                    animals.add(new Plants(true,field,location));
                 }
             }
-        }
-        for (Animal animal : animals){
-            Thread threadAnimals = new Thread((Runnable) animal);
-            executorService.execute(threadAnimals);
-
-
         }
     }
 

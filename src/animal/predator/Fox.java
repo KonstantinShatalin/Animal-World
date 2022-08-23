@@ -6,13 +6,8 @@ import animal.herbivorous.*;
 import java.util.List;
 import java.util.Random;
 
-public class Fox extends Animal implements Runnable,Behaviorable{
-    private List<Animal> newPredator;
-
-    public Fox(Field field, Location location, List<Animal> newPredator) {
-        super(field, location);
-        this.newPredator = newPredator;
-    }
+public class Fox extends Animal implements Behaviorable
+{
     private static final int BREEDING_AGE = 15;
     private static final int MAX_AGE = 150;
     private static final double BREEDING_PROBABILITY = 0.08;
@@ -72,7 +67,7 @@ public class Fox extends Animal implements Runnable,Behaviorable{
     }
 
     @Override
-    public synchronized Location findFood() {
+    public Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         for (Location where : adjacent) {
@@ -167,17 +162,5 @@ public class Fox extends Animal implements Runnable,Behaviorable{
     @Override
     public boolean canBreed() {
         return age >= BREEDING_AGE;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Thread Fox run!");
-        act(newPredator);
-        incrementAge();
-        incrementHunger();
-        findFood();
-        giveBirth(newPredator);
-        breed();
-        canBreed();
     }
 }

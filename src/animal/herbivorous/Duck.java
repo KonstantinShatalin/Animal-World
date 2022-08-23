@@ -4,13 +4,8 @@ import animal.*;
 import java.util.List;
 import java.util.Random;
 
-public class Duck extends Animal implements Runnable,Behaviorable{
-    private List<Animal> newHerbivorous;
-
-    public Duck(Field field, Location location, List<Animal> newHerbivorous) {
-        super(field, location);
-        this.newHerbivorous = newHerbivorous;
-    }
+public class Duck extends Animal implements Behaviorable
+{
     private static final int BREEDING_AGE = 7;
     private static final int MAX_AGE = 30;
     private static final double BREEDING_PROBABILITY = 0.18;
@@ -67,7 +62,7 @@ public class Duck extends Animal implements Runnable,Behaviorable{
     }
 
     @Override
-    public synchronized Location findFood() {
+    public Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         for (Location where : adjacent) {
@@ -107,17 +102,5 @@ public class Duck extends Animal implements Runnable,Behaviorable{
     @Override
     public boolean canBreed() {
         return age >= BREEDING_AGE;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Thread Duck run!");
-        act(newHerbivorous);
-        incrementAge();
-        incrementHunger();
-        findFood();
-        giveBirth(newHerbivorous);
-        breed();
-        canBreed();
     }
 }

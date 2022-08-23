@@ -2,19 +2,11 @@ package animal.predator;
 
 import animal.*;
 import animal.herbivorous.*;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Bear extends Animal implements Runnable,Behaviorable{
-    private List<Animal> newPredator;
-
-    public Bear(Field field, Location location, List<Animal> newPredator) {
-        super(field, location);
-        this.newPredator = newPredator;
-    }
-
+public class Bear extends Animal implements Behaviorable
+{
     private static final int BREEDING_AGE = 30;
     private static final int MAX_AGE = 300;
     private static final double BREEDING_PROBABILITY = 0.06;
@@ -74,7 +66,7 @@ public class Bear extends Animal implements Runnable,Behaviorable{
     }
 
     @Override
-    public synchronized Location findFood() {
+    public Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         for (Location where : adjacent) {
@@ -169,17 +161,5 @@ public class Bear extends Animal implements Runnable,Behaviorable{
     @Override
     public boolean canBreed() {
         return age >= BREEDING_AGE;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Thread Bear run!");
-        act(newPredator);
-        incrementAge();
-        incrementHunger();
-        findFood();
-        giveBirth(newPredator);
-        breed();
-        canBreed();
     }
 }

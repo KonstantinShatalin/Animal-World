@@ -6,17 +6,12 @@ import animal.herbivorous.*;
 import java.util.List;
 import java.util.Random;
 
-public class Boa extends Animal implements Runnable,Behaviorable{
-    private List<Animal> newPredator;
-
-    public Boa(Field field, Location location, List<Animal> newPredator) {
-        super(field, location);
-        this.newPredator = newPredator;
-    }
+public class Boa extends Animal implements Behaviorable
+{
     private static final int BREEDING_AGE = 10;
     private static final int MAX_AGE = 100;
     private static final double BREEDING_PROBABILITY = 0.07;
-    private static final int MAX_LITTER_SIZE = 5;
+    private static final int MAX_LITTER_SIZE = 3;
     private static final int HERBIVOROUS_FOOD_VALUE = 4;
     private static final Random rand = RandomNumbers.getRandom();
 
@@ -73,7 +68,7 @@ public class Boa extends Animal implements Runnable,Behaviorable{
     }
 
     @Override
-    public synchronized Location findFood() {
+    public Location findFood() {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         for (Location where : adjacent) {
@@ -170,16 +165,4 @@ public class Boa extends Animal implements Runnable,Behaviorable{
         return age >= BREEDING_AGE;
     }
 
-    @Override
-    public void run() {
-        System.out.println("Thread Boa run!");
-        act(newPredator);
-        incrementAge();
-        incrementHunger();
-        findFood();
-        giveBirth(newPredator);
-        breed();
-        canBreed();
-
-    }
 }

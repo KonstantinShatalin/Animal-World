@@ -5,14 +5,6 @@ import java.util.List;
 public abstract class Animal
 {
 
-    public static void main(String[] args) {
-        Simulator simulator = new Simulator();
-        simulator.runLongSimulation(); // длительная симуляция на 1000 итераций
-       // simulator.simulate(20); симуляция на количество итераций
-       // simulator.simulateOneStep(); симуляция одной итерации
-
-    }
-
     private boolean alive;
     private Field field;
     private Location location;
