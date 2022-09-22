@@ -17,10 +17,4 @@ public class RandomNumbers{
             return new Random();
         }
     }
-
-    public static void reset() {
-        if (useShared) {
-            rand.setSeed(SEED);
-        }
-    }
 }

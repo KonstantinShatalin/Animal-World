@@ -19,7 +19,7 @@ public abstract class Animal
         setLocation(location);
     }
 
-    abstract public void act(List<Animal> newAnimals);
+    public abstract void act(List<Animal> newAnimals);
 
     public boolean isAlive()
     {
