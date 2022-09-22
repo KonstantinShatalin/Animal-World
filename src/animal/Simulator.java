@@ -2,11 +2,12 @@ package animal;
 
 import animal.herbivorous.*;
 import animal.predator.*;
+import plant.Plant;
+import plant.Plants;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Simulator
 {
@@ -17,6 +18,7 @@ public class Simulator
     private static final double PLANTS_CREATION_PROBABILITY = 0.10;
 
     private List<Animal> animals;
+    private List<Plant> plants;
     private Field field;
     private int step;
     private SimulatorView view;
@@ -35,6 +37,7 @@ public class Simulator
             width = DEFAULT_WIDTH;
         }
         animals = new ArrayList<>();
+        plants = new ArrayList<>();
         field = new Field(depth, width);
 
         view = new SimulatorView(depth, width);
@@ -77,6 +80,7 @@ public class Simulator
         step++;
 
         List<Animal> newAnimals = new ArrayList<>();
+        List<Plant> newPlants = new ArrayList<>();
         for(Iterator<Animal> it = animals.iterator(); it.hasNext(); ) {
             Animal animal = it.next();
             animal.act(newAnimals);
@@ -84,8 +88,16 @@ public class Simulator
                 it.remove();
             }
         }
+        for(Iterator<Plant> it = plants.iterator(); it.hasNext(); ) {
+            Plant plant = it.next();
+            plant.act(newPlants);
+            if(!plant.isAlive()) {
+                it.remove();
+            }
+        }
 
         animals.addAll(newAnimals);
+        plants.addAll(newPlants);
 
         view.showStatus(step, field);
     }
@@ -94,6 +106,7 @@ public class Simulator
     {
         step = 0;
         animals.clear();
+        plants.clear();
         populate();
         view.showStatus(step, field);
     }
@@ -126,7 +139,7 @@ public class Simulator
                 }
                 else if (rand.nextDouble() <= PLANTS_CREATION_PROBABILITY){
                     Location location = new Location(row,col);
-                    animals.add(new Plants(true,field,location));
+                    plants.add(new Plants(true,field,location));
                 }
             }
         }

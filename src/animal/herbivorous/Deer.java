@@ -1,6 +1,8 @@
 package animal.herbivorous;
 
 import animal.*;
+import plant.Plant;
+
 import java.util.List;
 import java.util.Random;
 
@@ -67,9 +69,9 @@ public class Deer extends Animal implements Behaviorable
         List<Location> adjacent = field.adjacentLocations(getLocation());
         for (Location where : adjacent) {
             Object animal = field.getObjectAt(where);
-            if (animal instanceof Plants plants) {
-                if (plants.isAlive()) {
-                    plants.setDead();
+            if (animal instanceof Plant plant) {
+                if (plant.isAlive()) {
+                    plant.setDead();
                     foodLevel = PLANTS_FOOD_VALUE;
                     return where;
                 }

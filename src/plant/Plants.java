@@ -1,9 +1,13 @@
-package animal;
+package plant;
+
+import animal.Field;
+import animal.Location;
+import animal.RandomNumbers;
 
 import java.util.List;
 import java.util.Random;
 
-public class Plants extends Animal
+public class Plants extends Plant implements BehaviorablePlant
 {
     private static final int BREEDING_AGE = 5;
     private static final int MAX_AGE = 10;
@@ -21,9 +25,8 @@ public class Plants extends Animal
             age = rand.nextInt(MAX_AGE);
         }
     }
-
-
-    public void act(List<Animal> newPlants)
+    @Override
+    public void act(List<Plant> newPlants)
     {
         incrementAge();
         if(isAlive()) {
@@ -32,16 +35,16 @@ public class Plants extends Animal
                 setDead();
             }
         }
-
-    private void incrementAge()
+        @Override
+    public void incrementAge()
     {
         age++;
         if(age > MAX_AGE) {
             setDead();
         }
     }
-
-    private void giveBirth(List<Animal> newPlants)
+    @Override
+    public void giveBirth(List<Plant> newPlants)
     {
         Field field = getField();
         List<Location> free = field.getFreeAdjacentLocations(getLocation());
@@ -52,8 +55,8 @@ public class Plants extends Animal
             newPlants.add(young);
         }
     }
-
-    private int breed()
+    @Override
+    public int breed()
     {
         int births = 0;
         if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
@@ -61,8 +64,8 @@ public class Plants extends Animal
         }
         return births;
     }
-
-    private boolean canBreed()
+@Override
+    public boolean canBreed()
     {
         return age >= BREEDING_AGE;
     }
