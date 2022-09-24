@@ -9,6 +9,7 @@ import animal_world.animal.herbivorous_.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class Simulator
 {
@@ -23,11 +24,20 @@ public class Simulator
     private Field field;
     private int step;
     private SimulatorView view;
+    private final BlockingQueue<Runnable> blockingQueue = new LinkedBlockingQueue<>();
 
     public Simulator()
     {
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
     }
+
+    protected final ExecutorService executor = new ThreadPoolExecutor(
+            100,
+            100,
+            Long.MAX_VALUE,
+            TimeUnit.DAYS,
+            blockingQueue
+    );
 
     public Simulator(int depth, int width)
     {
@@ -101,6 +111,7 @@ public class Simulator
         plants.addAll(newPlants);
 
         view.showStatus(step, field);
+        executor.execute(this::simulateOneStep);
     }
 
     public void reset()
